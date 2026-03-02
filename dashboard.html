@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./fontawesome-free-7.2.0-web/css/all.min.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #e0f0ff;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .left-column {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+            color: #03396c;
+        }
+
+        #time {
+            font-family: monospace;
+            font-size: 24px;
+            background: #cce6ff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        #announcement {
+            display: block;
+            font-size: 16px;
+            background: #cce6ff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0096c7;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .stat i {
+            color: #0077b6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="tasks.html">Tasks</a>
+        <a href="courses.html">Courses</a>
+        <a href="profile.html">Profile</a>
+        <a href="logout.html" id="logout">Logout</a>
+    </nav>
+
+    <div class="dashboard">
+        <div class="left-column">
+            <div class="card clock">
+                <strong>Clock</strong>
+                <hr>
+                <span id="time"></span>
+            </div>
+
+            <div class="card announcement">
+                <strong>Announcements</strong>
+                <hr>
+                <div style="font-family:'Franklin Gothic Medium';">welcome to LMS</div>
+                <span id="announcement"></span>
+                <button id="nextAnnounce">Next</button>
+            </div>
+        </div>
+
+        <!-- Right column: Statistics -->
+        <div class="right-column">
+            <div class="card stats">
+                <strong>Live Statistics</strong>
+                <hr>
+                <div class="stat"><i class="fa fa-tasks"></i> <span id="totalTasks">0</span> Total Tasks</div>
+                <div class="stat"><i class="fa fa-check"></i> <span id="completedTasks">0</span> Completed</div>
+                <div class="stat"><i class="fa fa-clock"></i> <span id="pendingTasks">0</span> Pending</div>
+                <div class="stat"><i class="fa fa-book"></i> <span id="totalCourses">0</span> Courses</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Clock
+        setInterval(() => {
+            var now = new Date();
+            var h = String(now.getHours()).padStart(2, '0');
+            var m = String(now.getMinutes()).padStart(2, '0');
+            var s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${h}:${m}:${s}`;
+        }, 1000);
+
+        // Announcements
+        var announcements = [
+            "Submit Assignment 1 by Friday",
+            "New course material uploaded",
+            "Check your grades regularly",
+            "Join the live Q&A session tomorrow"
+        ];
+        
+        var announceEl = document.getElementById('announcement');
+        announceEl.textContent = announcements[currentAnn];
+        var currentAnn=1;
+        var nextAnnouncement=function(){
+           if(currentAnn==announcements.length-1){
+            currentAnn=0;
+           } else{
+            currentAnn++;
+           }
+            announceEl.textContent = announcements[currentAnn];
+        };
+        var nextSliding=setInterval(nextAnnouncement,2500);
+        document.getElementById('nextAnnounce').addEventListener('click', ()=>{ 
+            nextAnnouncement();
+            clearInterval(nextSliding);
+
+        });
+        
+        var tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        var courses = JSON.parse(localStorage.getItem('courses') || '[]');
+
+        document.getElementById('totalTasks').textContent = tasks.length;
+        document.getElementById('completedTasks').textContent = tasks.filter(t => t.completed).length;
+        document.getElementById('pendingTasks').textContent = tasks.filter(t => !t.completed).length;
+        document.getElementById('totalCourses').textContent = courses.length;
+
+        // Logout button
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('loggedInUser'); // 
+            window.location.href = "login.html";
+        });
+    </script>
+
+</body>
+</html>

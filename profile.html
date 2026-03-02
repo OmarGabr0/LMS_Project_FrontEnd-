@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="./css/navbar.css">
+    <style>
+        body {
+            background-color: #e0f4ff;
+            margin: 0;
+            font-family: sans-serif;
+            justify-content: center;
+            padding-top: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-card {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 350px;
+        }
+
+        .profile-card input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #0077b6;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .btn-update {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-update:hover {
+            box-shadow: inset 0px 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sticky Navbar -->
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="courses.html">Courses</a>
+        <a href="logout.html" id="logout">Logout</a>
+    </nav>
+
+    <!-- Profile Card -->
+    <div class="container">
+        <div class="profile-card">
+            <h2>Update Username</h2>
+            <input type="text" id="usernameInput" placeholder="Enter new username">
+            <button class="btn-update" id="updateBtn">Update</button>
+        </div>
+    </div>
+    <script>
+        const usernameInput = document.getElementById("usernameInput");
+
+        // Load current username if it exists
+        const storedUsername = localStorage.getItem("loggedInUser");
+        if (storedUsername) {
+            usernameInput.value = storedUsername;
+        }
+
+        // Update username logic
+        document.getElementById("updateBtn").addEventListener("click", () => {
+            const newName = usernameInput.value.trim();
+            if (newName) {
+                localStorage.setItem("loggedInUser", newName);
+                alert("Username saved!");
+            } else {
+                alert("Username cannot be empty!");
+            }
+        });
+
+        // Logout button
+        document.getElementById("logout").addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.replace = "login.html";
+        });
+    </script>
+</body>
+
+</html>

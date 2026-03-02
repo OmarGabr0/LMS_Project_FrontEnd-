@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./fontawesome-free-7.2.0-web/css/all.min.css">
+    <style>
+        body {
+            background-color: #e0f4ff;
+            margin: 0;
+            font-family: sans-serif;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .form-box input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            flex: 1;
+        }
+
+        .form-box button {
+            background-color: #4266b2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .form-box button:hover {
+            box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .courses-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .course-card {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+            width: calc(50% - 15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .course-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .course-card .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card button {
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .course-card button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="profile.html">Profile</a>
+        <a href="logout.html" id="logout">Logout</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="form-box">
+            <input id="courseName" type="text" placeholder="Course Name" required>
+            <input id="instructor" type="text" placeholder="Instructor Name" required>
+            <button id="addCourse"><i class="fa fa-plus"></i></button>
+        </div>
+
+        <div class="courses-list" id="coursesList">
+
+        </div>
+
+    </div>
+
+    <script>
+        //login check
+        if (!localStorage.getItem("username")) {
+            window.location.href = "login.html";
+        }
+
+
+        var courses = JSON.parse(localStorage.getItem("courses")) || [];
+        var coursesList = document.getElementById("coursesList");
+
+        function renderCourses() {
+            coursesList.innerHTML = "";
+            courses.forEach((course, index) => {
+                var card = document.createElement("div");
+                card.className = "course-card";
+
+                var info = document.createElement("div");
+                info.className = "info";
+                info.innerHTML = `<strong>${course.name}</strong><span>${course.instructor}</span>`;
+
+                var delBtn = document.createElement("button");
+                delBtn.innerHTML = `<i class="fa fa-trash"></i>`;
+                delBtn.addEventListener("click", () => {
+                    if (confirm("Delete this course?")) {
+                        courses.splice(index, 1);
+                        localStorage.setItem("courses", JSON.stringify(courses));
+                        renderCourses();
+                    }
+                });
+
+                card.appendChild(info);
+                card.appendChild(delBtn);
+                coursesList.appendChild(card);
+            });
+        }
+
+        renderCourses();
+
+        document.getElementById("addCourse").addEventListener("click", () => {
+            let name = document.getElementById("courseName").value.trim();
+            let instructor = document.getElementById("instructor").value.trim();
+
+            if (!name || !instructor) return;
+
+            courses.push({ name, instructor });
+            localStorage.setItem("courses", JSON.stringify(courses));
+            renderCourses();
+
+            document.getElementById("courseName").value = "";
+            document.getElementById("instructor").value = "";
+        });
+    </script>
+
+</body>
+
+</html>

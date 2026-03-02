@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./fontawesome-free-7.2.0-web/css/all.min.css">
+    <style>
+        body {
+            background-color: #f2f8ff;
+            font-family: sans-serif;
+            padding: 10px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .task-form,
+        .task-list {
+            background-color: #e0f0ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-form {
+            flex: 1.5;
+        }
+
+        .task-list {
+            flex: 2;
+        }
+
+        .task-form input,
+        .task-form select,
+        .task-form button {
+            display: block;
+            width: 95%;
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid #1e90ff;
+        }
+
+        .task-form button {
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .task-form button:hover {
+            background-color: #0f70d0;
+        }
+
+        .task-card {
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .task-card.done span {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .task-card button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+
+        .task-card button.complete {
+            color: green;
+        }
+
+        .task-card button.delete {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="courses.html">Courses</a>
+        <a href="profile.html">Profile</a>
+        <a href="logout.html" id="logout">Logout</a>
+    </nav>
+
+    <div class="container">
+        <div class="task-form">
+            <h2>Add New Task</h2>
+            <input type="text" id="taskTitle" placeholder="Task Title" required>
+            <input type="date" id="taskDue" required>
+            <select id="taskPriority">
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low Priority</option>
+            </select>
+            <button id="addTaskBtn">Add Task</button>
+        </div>
+
+        <div class="task-list">
+            <h2>My Tasks</h2>
+            <div id="tasksContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // login check
+        if (!localStorage.getItem('username')) {
+            window.location.href = 'login.html';
+        }
+
+        var tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        var container = document.getElementById('tasksContainer');
+
+        function renderTasks() {
+            container.innerHTML = '';
+            tasks.forEach((task, index) => {
+                var card = document.createElement('div');
+                card.className = 'task-card' + (task.done ? ' done' : '');
+                card.innerHTML = `
+                    <span>${task.title} - ${task.due} [${task.priority}]</span>
+                    <div>
+                        <button class="complete"><i class="fa fa-check"></i></button>
+                        <button class="delete"><i class="fa fa-trash"></i></button>
+                    </div>
+                `;
+                card.querySelector('.complete').addEventListener('click', () => {
+                    tasks[index].done = !tasks[index].done;
+                    saveAndRender();
+                });
+
+                card.querySelector('.delete').addEventListener('click', () => {
+                    if (confirm('Delete this task?')) {
+                        tasks.splice(index, 1);
+                        saveAndRender();
+                    }
+                });
+                container.appendChild(card);
+            });
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        document.getElementById('addTaskBtn').addEventListener('click', () => {
+            var title = document.getElementById('taskTitle').value.trim();
+            var due = document.getElementById('taskDue').value;
+            var priority = document.getElementById('taskPriority').value;
+
+            if (!title || !due) return alert('Please enter all fields');
+
+            tasks.push({ title, due, priority, done: false });
+            saveAndRender();
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDue').value = '';
+        });
+
+        // Initial render
+        renderTasks();
+
+
+    </script>
+</body>
+
+</html>

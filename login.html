@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #e0f0ff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            background-color: #ffffff;
+            width: 400px;
+            height: 250px;
+            margin: auto;
+            margin-top: 100px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+
+        }
+
+        h1 {
+            font-weight: bold;
+            font-size: large;
+        }
+
+        #inputs span.instr {
+            font-size: small;
+            color: gray;
+            width: 250px;
+        }
+
+        #inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            width: 200px;
+        }
+
+
+
+        .btn {
+            background-color: #4266b2;
+            border-color: #4266b2;
+            border-radius: 30px;
+            padding: 10px 25px;
+            width: 100px;
+            color: white;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            box-shadow: inset 0px 10px 20px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+
+
+        }
+
+        .inpinvalid {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1> Sign in</h1>
+        <hr>
+
+        <form>
+            <div id="inputs">
+                <input class="form-control" id="email" type="email" placeholder="Email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                <span class="instr"> required email should be in the format</span>
+
+                <input class="form-control" id="password" type="password" placeholder="Password" minlength="6" required>
+
+
+                <button id="loginBnt" class="btn" type="submit"> Login</button>
+                <label>
+                    <input id="remember" type="checkbox"> Remember me
+                </label>
+            </div>
+        </form>
+    </div>
+    <script>
+        var loggedInUser = localStorage.getItem("loggedInUser");
+        var emailsaved = localStorage.getItem("email");
+        var passwordsaved = localStorage.getItem("password");
+        //if was checked
+        window.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("rememberme")) {
+                localStorage.setItem("rememberme", 1);
+                document.getElementById("email").value = emailsaved;
+                document.getElementById("password").value = passwordsaved;
+                document.getElementById("remember").checked = true;
+            } else {
+                localStorage.setItem("rememberme", 0);
+            }
+
+            if (loggedInUser) {
+                window.location.replace("dashboard.html");
+            }
+        });
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (document.getElementById("remember").checked) {
+                localStorage.setItem("password", document.querySelector("#password").value);
+                localStorage.setItem("email", document.querySelector("#email").value);
+                localStorage.setItem("rememberme", 1);
+                document.getElementById("remember").checked = true;
+            } else {
+                localStorage.removeItem("password");
+                localStorage.removeItem("email");
+                localStorage.setItem("rememberme", 0);
+            }
+            localStorage.setItem("loggedInUser", 1);
+            window.location.replace("dashboard.html");
+        });
+
+
+
+    </script>
+</body>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/navbar.css">
+
+    <style>
+        body {
+            background-color: #e0f4ff;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .logout-card {
+            background-color: white;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 400px;
+            margin: 100px auto;
+        }
+
+        .logout-card button {
+            background-color: #0077b6;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-card button:hover {
+            box-shadow: inset 0px 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="profile.html">Profile</a>
+        <a href="courses.html">Courses</a>
+    </nav>
+
+    <div class="logout-card">
+        <h2><i class="fa-solid fa-right-from-bracket"></i> Are you sure you want to logout?</h2>
+        <button id="logout" type="submit"> Logout</button>
+    </div>
+
+    <script>
+
+        document.getElementById("logout").addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.replace("bye.html"); 
+        });
+
+    </script>
+</body>
+
+</html>
